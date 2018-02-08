@@ -12,14 +12,14 @@ end)
 function init()
     -- configure wifi reset button
     gpio.trig(3, "down", pin3cb)
-    
+
     -- initialize display
     init_spi_display()
-    
+
     disp:begin(ucg.FONT_MODE_TRANSPARENT)
     disp:clearScreen()
     disp:setRotate90()
-    
+
     disp:setFont(ucg.font_helvB18_hr)
     disp:setColor(255, 255, 255);
     disp:setPrintPos((disp:getWidth() - disp:getStrWidth(deviceTitle)) / 2, 25)
@@ -29,14 +29,14 @@ function init()
     printText("Humidity", 18, 5, 120)
     printText("Pressure", 18, 5, 150)
     printText("50", 10, 292, 47)
-    printText("-20", 10, 290, 204)    
-    
+    printText("-20", 10, 290, 204)
+
     --disp:drawFrame(20, 93, 42, 102)
-    
+
     -- initialize BME280
     i2c.setup(0, sda, scl, i2c.SLOW) -- call i2c.setup() only once
     bme280.setup()
-    
+
     if wifiEnabled then
         local def_sta_config=wifi.sta.getdefaultconfig(true)
         if def_sta_config.ssid ~= "" then
@@ -48,7 +48,7 @@ function init()
         else
             lcdPrint("No wifi config found on flash. Turning on IoT Setup")
         end
-    
+
         -- configure wifi via enduser setup
         --wifi.setmode(wifi.STATIONAP)
         --wifi.ap.config({ssid="IoTSetup_" .. wifi.sta.getmac(), auth=wifi.OPEN})
@@ -83,7 +83,7 @@ function init()
                 lcdPrint("enduser_setup: Err #" .. err .. ": " .. str)
             end
         );
-    
+
         tmr.alarm(0, 3000, 1, function()
             if wifi.sta.getip()==nil then
                 def_sta_config=wifi.sta.getdefaultconfig(true)
@@ -93,16 +93,16 @@ function init()
             end
         end)
     end
-    
+
     -- run update at start
     update()
-    
+
     cron.reset()
     cron.schedule("* * * * *", function(e)
         print("----------------Every minute----------------")
         update()
     end)
-    
+
     -- restart every hour
     cron.schedule("1 * * * *", function(e)
         --node.restart()
