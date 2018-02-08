@@ -12,10 +12,11 @@
 
 ## SPI setup to connect display in func.lua
 Initialize the matching driver for your display. All available are here http://nodemcu.readthedocs.io/en/master/en/modules/ucg/#display-drivers
+```sh
+disp = ucg.ili9341_18x240x320_hw_spi(cs, dc, res)
+```
 
-                disp = ucg.ili9341_18x240x320_hw_spi(cs, dc, res)
-
-## Connect it to NodeMCU
+Connect it to NodeMCU
 * Hardware SPI CLK  = GPIO14
 * Hardware SPI MOSI = GPIO13
 * Hardware SPI MISO = GPIO12 (not used)
