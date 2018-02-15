@@ -26,8 +26,8 @@ end
 
 function lcdPrint(txt)
     if serialDebug then print(txt) end
-    disp:setColor(255, 0, 0);
-    disp:drawBox(0, 210, 320, 20);
+    disp:setColor(255, 0, 0)
+    disp:drawBox(0, 210, 320, 20)
     disp:setPrintPos(2, 225)
     disp:setColor(255, 255, 255);
     disp:setFont(ucg.font_7x13B_tr)
@@ -36,7 +36,7 @@ function lcdPrint(txt)
     tmr.stop(2)
     tmr.alarm(2, 10000, 1, function()
         disp:setColor(0, 0, 0);
-        disp:drawBox(0, 201, 320,30);
+        disp:drawBox(0, 205, 320, 25);
         tmr.stop(2)
     end)
 end

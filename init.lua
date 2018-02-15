@@ -21,7 +21,7 @@ function init()
     disp:setRotate90()
 
     disp:setFont(ucg.font_helvB18_hr)
-    disp:setColor(255, 255, 255);
+    disp:setColor(255, 255, 255)
     disp:setPrintPos((disp:getWidth() - disp:getStrWidth(deviceTitle)) / 2, 25)
     disp:print(deviceTitle)
 
@@ -82,7 +82,7 @@ function init()
             function(err, str)
                 lcdPrint("enduser_setup: Err #" .. err .. ": " .. str)
             end
-        );
+        )
 
         tmr.alarm(0, 3000, 1, function()
             if wifi.sta.getip()==nil then

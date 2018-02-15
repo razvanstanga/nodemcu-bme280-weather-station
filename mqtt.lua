@@ -38,7 +38,7 @@ if mqttConfig.enabled == true then
         end
 
         if topic == prefix .. "/device" then
-            lcdPrint('\tNew request from IoT Control Center: clientId="' .. json.clientId .. '"');
+            lcdPrint('\tNew request from IoT Control Center: clientId="' .. json.clientId .. '"')
             if json.time then
                 rtctime.set(json.time + timezoneHours * 60 * 60, 0)
                 update()
