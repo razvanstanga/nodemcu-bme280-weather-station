@@ -18,7 +18,7 @@ mqttConfig.enabled = true
 mqttConfig.host = ''
 mqttConfig.port = ''
 mqttConfig.user = ''
-mqttConfig.pass = 'iot'
+mqttConfig.pass = ''
 mqttConfig.secure = 0
 mqttConfig.connected = false
 

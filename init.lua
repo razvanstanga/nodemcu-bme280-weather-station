@@ -29,7 +29,7 @@ function init()
     printText("Humidity", 18, 5, 120)
     printText("Pressure", 18, 5, 150)
     printText("50", 10, 292, 47)
-    printText("-20", 10, 290, 204)
+    printText("-20", 10, 290, 206)
 
     --disp:drawFrame(20, 93, 42, 102)
 

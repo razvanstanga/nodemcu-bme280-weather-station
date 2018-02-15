@@ -4,11 +4,11 @@
 * integrated with IoTCC using mqtt
 * display on SPI TFT LCD
 * NTP time sync
-* debug un serial and LCD
+* debug on serial and LCD
 
 ## WIP
 * integration with PWS
-* forcast
+* forcast via external webservice (based on pressure) due to low memory
 
 ## SPI setup to connect display in func.lua
 Initialize the matching driver for your display. All available are here http://nodemcu.readthedocs.io/en/master/en/modules/ucg/#display-drivers
