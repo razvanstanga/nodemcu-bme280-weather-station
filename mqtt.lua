@@ -15,12 +15,21 @@ sntp.sync(ntpserver,
 
 -- initiate the mqtt client and set keepalive timer to 120sec
 if mqttConfig.enabled == true then
-    mqtt = mqtt.Client(device, 120, mqttConfig.user, mqttConfig.pass, 1)
 
-    mqtt:on("connect", function(con)
+    function onConnect()
         lcdPrint("\tConnected to " .. mqttConfig.host .. ":" .. mqttConfig.port .. " MQTT broker\n")
+        mqttConfig.connected = true
+        -- subscribe topic with qos = 1
+        mqtt:subscribe({[prefix .. "/+/+/data"]=1, [prefix .. "/device"]=1}, function(conn)
+        end)
+    end
+
+    mqtt = mqtt.Client(device, 120, mqttConfig.user, mqttConfig.pass, true)
+
+    mqtt:on("connect", function(conn)
+        onConnect()
     end)
-    mqtt:on("offline", function(con)
+    mqtt:on("offline", function(conn)
         lcdPrint("\tDisconected from " .. mqttConfig.host .. ":" .. mqttConfig.port .. " MQTT broker, reconnecting\n")
         mqttConfig.connected = false
     end)
@@ -43,17 +52,18 @@ if mqttConfig.enabled == true then
                 rtctime.set(json.time + timezoneHours * 60 * 60, 0)
                 update()
             end
-            mqtt:publish(prefix .. device .. "/device", '{"pages" : [{"pageId" : 50, "pageName" : "Weather stations", "icon": "fa fa-thermometer-quarter"}]}', 1, 0, function(conn)
+            mqtt:publish(prefix .. device .. "/device", '{"pages" : [{"id" : 50, "name" : "Weather stations", "icon": "fa fa-thermometer-quarter", "order": "1000"}]}', 1, 0, function(conn)
             end)
             update()
         end
     end)
 
     mqtt:connect(mqttConfig.host, mqttConfig.port, mqttConfig.secure, function(conn)
-        lcdPrint("\tConnected to " .. mqttConfig.host .. ":" .. mqttConfig.port .. " MQTT broker\n")
-        mqttConfig.connected = true
-        -- subscribe topic with qos = 1
-        mqtt:subscribe({[prefix .. "/+/+/data"]=1, [prefix .. "/device"]=1}, function(conn)
-        end)
+            onConnect()
+        end,
+        function(conn, reason)
+            print("\tCould not connect to MQTT server")
+            print("\tClient ", conn)
+            print("\tReason ", reason)
     end)
 end

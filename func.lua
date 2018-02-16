@@ -24,8 +24,9 @@ function getDateTime ()
     return string.format("%02d/%02d/%04d %02d:%02d",  tm["day"], tm["mon"], tm["year"], tm["hour"], tm["min"])
 end
 
-function lcdPrint(txt)
-    if serialDebug then print(txt) end
+function lcdPrint(txt, txt1)
+    txt1 = txt1 or ''
+    if serialDebug then print(txt, txt1) end
     disp:setColor(255, 0, 0)
     disp:drawBox(0, 210, 320, 20)
     disp:setPrintPos(2, 225)
@@ -124,6 +125,8 @@ function update()
     end
 
     if mqttConfig.connected == true then
+        sData.value = sData.temperature
+        sData.valueappend = " C"
         mqtt:publish(sData.topic .. "/config", sjson.encode(sData), 1, 0, function(conn)
         end)
     end

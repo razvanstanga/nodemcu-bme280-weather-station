@@ -19,7 +19,7 @@ mqttConfig.host = ''
 mqttConfig.port = ''
 mqttConfig.user = ''
 mqttConfig.pass = ''
-mqttConfig.secure = 0
+mqttConfig.secure = false
 mqttConfig.connected = false
 
 sData = {}
@@ -31,6 +31,7 @@ sData.dew_point = 0
 sData.altitude = 0
 sData.pageName = "Comana weather station"
 sData.pageId = 50
+sData.pageOrder = 100
 sData.widget = "data"
 sData.title = "Summer kitchen temperature"
 sData.topic = prefix .. device ..'/ws1'
