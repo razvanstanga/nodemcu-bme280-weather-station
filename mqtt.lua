@@ -26,15 +26,16 @@ if mqttConfig.enabled == true then
 
     mqtt = mqtt.Client(device, 120, mqttConfig.user, mqttConfig.pass, true)
 
+    -- on connect
     mqtt:on("connect", function(conn)
         onConnect()
     end)
+    -- on disconnect
     mqtt:on("offline", function(conn)
-        lcdPrint("\tDisconected from " .. mqttConfig.host .. ":" .. mqttConfig.port .. " MQTT broker, reconnecting\n")
+        lcdPrint("\tDisconected from MQTT broker, reconnecting\n")
         mqttConfig.connected = false
         connect()
     end)
-
     -- on receive message
     mqtt:on("message", function(conn, topic, message)
         lcdPrint("\tReceived topic : " .. topic .. " / message : " .. message)
@@ -65,8 +66,7 @@ if mqttConfig.enabled == true then
                 onConnect()
             end,
             function(conn, reason)
-                print("\tCould not connect to MQTT server")
-                print("\tClient ", conn)
+                print("\tCould not connect to MQTT server, reconnecting")
                 print("\tReason ", reason)
                 tmr.create():alarm(10 * 1000, tmr.ALARM_SINGLE, connect())
         end)
