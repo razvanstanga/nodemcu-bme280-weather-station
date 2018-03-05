@@ -5,7 +5,7 @@ sntp.sync(ntpserver,
     function(sec, usec, server, info)
         rtctime.set(sec + timezoneHours * 60 * 60, 0)
         lcdPrint('NTP sync success! ' .. getDateTime())
-        update()
+        --update()
     end,
     function()
         lcdPrint('NTP sync failed!')
@@ -32,6 +32,7 @@ if mqttConfig.enabled == true then
     mqtt:on("offline", function(conn)
         lcdPrint("\tDisconected from " .. mqttConfig.host .. ":" .. mqttConfig.port .. " MQTT broker, reconnecting\n")
         mqttConfig.connected = false
+        connect()
     end)
 
     -- on receive message
@@ -50,7 +51,7 @@ if mqttConfig.enabled == true then
             lcdPrint('\tNew request from IoT Control Center: clientId="' .. json.clientId .. '"')
             if json.time then
                 rtctime.set(json.time + timezoneHours * 60 * 60, 0)
-                update()
+                --update()
             end
             mqtt:publish(prefix .. device .. "/device", '{"pages" : [{"id" : 50, "name" : "Weather stations", "icon": "fa fa-thermometer-quarter", "order": "1000"}]}', 1, 0, function(conn)
             end)
@@ -58,12 +59,17 @@ if mqttConfig.enabled == true then
         end
     end)
 
-    mqtt:connect(mqttConfig.host, mqttConfig.port, mqttConfig.secure, function(conn)
-            onConnect()
-        end,
-        function(conn, reason)
-            print("\tCould not connect to MQTT server")
-            print("\tClient ", conn)
-            print("\tReason ", reason)
-    end)
+    function connect()
+        lcdPrint("\tConnecting to " .. mqttConfig.host .. ":" .. mqttConfig.port .. " MQTT broker\n")
+        mqtt:connect(mqttConfig.host, mqttConfig.port, mqttConfig.secure, function(conn)
+                onConnect()
+            end,
+            function(conn, reason)
+                print("\tCould not connect to MQTT server")
+                print("\tClient ", conn)
+                print("\tReason ", reason)
+                tmr.create():alarm(10 * 1000, tmr.ALARM_SINGLE, connect())
+        end)
+    end
+    connect()
 end
