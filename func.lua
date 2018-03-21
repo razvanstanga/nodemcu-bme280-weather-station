@@ -2,14 +2,14 @@
 
 -- setup SPI and connect display
 function init_spi_display()
-   -- Hardware SPI CLK  = GPIO14
-   -- Hardware SPI MOSI = GPIO13
-   -- Hardware SPI MISO = GPIO12 (not used)
-   -- Hardware SPI /CS  = GPIO15 (not used)
+   -- Hardware SPI CLK  = D5 / GPIO14
+   -- Hardware SPI MOSI = D7 / GPIO13
+   -- Hardware SPI MISO = D6 / GPIO12 (not used)
+   -- Hardware SPI /CS  = D8 / GPIO15 (not used)
    -- CS, D/C, and RES can be assigned freely to available GPIOs
-   local cs  = 8 -- GPIO15, pull-down 10k to GND
-   local dc  = 4 -- GPIO2
-   local res = 0 -- GPIO16
+   local cs  = 8 -- D8 / GPIO15, pull-down 10k to GND
+   local dc  = 4 -- D4 / GPIO2
+   local res = 0 -- D0 / GPIO16
 
    spi.setup(1, spi.MASTER, spi.CPOL_LOW, spi.CPHA_LOW, 8, 8)
    -- we won't be using the HSPI /CS line, so disable it again
@@ -108,12 +108,12 @@ function update()
     if P and T then
         sData.baro_qfe = string.format("%d.%03d", P/1000, P%1000)
         if serialDebug then print("QFE=" .. sData.baro_qfe) end
+        printText(sData.baro_qfe, 18, 170, 150)
 
         -- convert measure air pressure to sea level pressure
         QNH = bme280.qfe2qnh(P, altitude)
         sData.baro_qnh = string.format("%d.%03d", QNH/1000, QNH%1000)
         if serialDebug then print("QNH=" .. sData.baro_qnh) end
-        printText(sData.baro_qnh, 18, 170, 150)
     end
         -- altimeter function - calculate altitude based on current sea level pressure (QNH) and measure pressure
     P = bme280.baro()
